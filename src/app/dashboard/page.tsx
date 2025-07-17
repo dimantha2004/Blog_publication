@@ -100,7 +100,7 @@ export default function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Account Information */}
+          
           <Card>
             <CardHeader>
               <CardTitle>Account Information</CardTitle>
@@ -118,11 +118,9 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          {/* Subscription Information */}
-          {/* Removed subscription card for demo mode */}
+         
         </div>
 
-        {/* My Posts Section */}
         <Card className="mt-6">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -167,8 +165,7 @@ export default function DashboardPage() {
             )}
           </CardContent>
         </Card>
-
-        {/* Quick Actions */}
+        
         <Card className="mt-6">
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
