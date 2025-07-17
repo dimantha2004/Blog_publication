@@ -12,7 +12,6 @@ export default function Home() {
           height={48}
           priority
         />
-        
         <h1 className="text-4xl font-bold mb-2 text-center">Blog Publication</h1>
         <p className="text-lg text-center text-gray-600 dark:text-gray-300 mb-6">
           Publish your thoughts, share your stories. A simple blog platform for everyone.
