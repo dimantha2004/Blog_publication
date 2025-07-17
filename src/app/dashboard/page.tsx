@@ -165,7 +165,7 @@ export default function DashboardPage() {
             )}
           </CardContent>
         </Card>
-        
+
         <Card className="mt-6">
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
