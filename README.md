@@ -1,36 +1,20 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Blog Publication 📝
+A sleek, modern blog built with Next.js and TypeScript, featuring dynamic routing, SEO optimization, image handling, and easy publishing workflow.
 
-## Getting Started
+🚀 Features
+Next.js + TypeScript for type safety and performance
 
-First, run the development server:
+App router structure (src/app/) for clear page layout
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Markdown or MDX support for authoring content
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Dynamic routing for blog posts (e.g., /posts/my-first-post)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Optimized image loading with next/image
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Custom global styling via PostCSS/Tailwind/PostCSS
 
-## Learn More
+Linting and formatting with ESLint & Prettier
 
-To learn more about Next.js, take a look at the following resources:
+Ready-to-deploy configuration for Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
