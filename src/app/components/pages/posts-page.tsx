@@ -72,7 +72,6 @@ export function PostsPage() {
           )}
         </div>
 
-        {/* Search and Filter */}
         <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">

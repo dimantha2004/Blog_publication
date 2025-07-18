@@ -20,7 +20,6 @@ export function CheckoutButton({ product, className, children }: CheckoutButtonP
   const handleCheckout = async () => {
     setLoading(true);
     try {
-      // For demo: always redirect to Stripe test page
       window.location.href = 'https://buy.stripe.com/test_9B614p8anbte7Hg4cc2Ry00';
     } finally {
       setLoading(false);
