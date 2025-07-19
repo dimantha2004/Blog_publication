@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<p align="center"> <img width="300" src="https://raw.githubusercontent.com/dimantha2004/Blog_publication/main/public/social-card.png" alt="Blog Publication Logo" /> </p>
+🚀 Blog Publication
+A modern, feature-rich blogging platform built with Next.js, TypeScript, and MDX, designed for easy content creation, SEO optimization, and seamless deployment.
 
-## Getting Started
+🎯 Highlights
+⚡️ Blazing-fast performance powered by Next.js and static generation
 
-First, run the development server:
+Type-safe development with full TypeScript support
 
-```bash
+App Router structure (src/app/) for clean routing and layouts
+
+MDX support: Compose rich articles with JSX + Markdown
+
+SEO-ready: Metadata, Open Graph, and optimized page titles
+
+Image optimization using Next/Image
+
+Tailwind CSS + global styles for utility-first styling
+
+Linting & format enforcement via ESLint and Prettier
+
+CI/CD integration: Ready for GitHub Actions, Vercel, or Netlify
+
+📦 Features
+Content sourcing from .md / .mdx in src/content/posts/
+
+Dynamic routing: Path generated from frontmatter (e.g., /posts/my-first-post)
+
+RSS feed auto-generated from posts
+
+Tag filtering: Group posts by tags/keywords
+
+Pagination & archive views
+
+All Posts page and Home Preview section
+
+Default dark/light theme via CSS variables
+
+🛠️ Project Structure
+ruby
+Copy
+Edit
+.
+├── public/                  # Static assets (images, fonts, favicon)
+├── src/
+│   ├── app/                 # Next.js app router (page/layout structure)
+│   ├── components/          # Reusable UI components
+│   ├── content/
+│   │   └── posts/           # Your Markdown/MDX blog posts
+│   ├── lib/                 # Helpers/util modules (markdown, feeds, metadata)
+│   └── styles/              # Global CSS / Tailwind config
+├── .eslintrc.mjs            # Linting rules
+├── .prettierrc              # Code formatting conventions
+├── next.config.js           # Next.js build config
+├── tsconfig.json            # TypeScript config
+└── package.json             # Scripts & dependencies
+🚧 Getting Started
+1. Clone & Install
+bash
+Copy
+Edit
+git clone https://github.com/dimantha2004/Blog_publication.git
+cd Blog_publication
+npm install
+# or yarn install / pnpm install
+2. Run Dev Server
+bash
+Copy
+Edit
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+# or yarn dev / pnpm dev
+Open http://localhost:3000 in your browser.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+✍️ Write Your First Post
+Create a new file: src/content/posts/your-title.mdx
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Add frontmatter metadata:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+md
+Copy
+Edit
+---
+title: "Your Post Title"
+date: "2025-07-18"
+description: "A quick summary of your content."
+tags: ["nextjs", "blog"]
+---
+Start writing in MDX—you can embed React components too!
 
-## Learn More
+Visit: http://localhost:3000/posts/your-title
 
-To learn more about Next.js, take a look at the following resources:
+🚀 Build & Deploy
+Build the production version:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+bash
+Copy
+Edit
+npm run build
+Preview locally:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+bash
+Copy
+Edit
+npm run preview
+Deploy on platforms like:
 
-## Deploy on Vercel
+Vercel: Automatic via GitHub integration
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Netlify: Connect repo & build settings
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+GitHub Pages or custom hosting
+
