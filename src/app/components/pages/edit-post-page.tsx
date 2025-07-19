@@ -1,11 +1,11 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { PostForm } from '@/components/blog/post-form';
-import { usePost, usePosts } from '@/hooks/use-posts';
-import { useAuth } from '@/hooks/use-auth';
+import { PostForm } from '../../components/blog/post-form';
+import { usePost, usePosts } from '../../hooks/use-posts';
+import { useAuth } from '../../hooks/use-auth';
 import { useEffect } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '../../components/ui/skeleton';
 
 interface EditPostPageProps {
   postId: string;
@@ -53,7 +53,11 @@ export function EditPostPage({ postId }: EditPostPageProps) {
     );
   }
 
-  const handleSubmit = async (data: any) => {
+  type PostFormData = {
+    title: string;
+    content: string;
+  };
+  const handleSubmit = async (data: PostFormData) => {
     await updatePost(post.id, data);
     router.push('/dashboard');
   };

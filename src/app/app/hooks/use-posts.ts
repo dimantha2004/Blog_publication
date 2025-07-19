@@ -48,7 +48,7 @@ export function usePosts(options?: {
         .from('posts')
         .select('*', { count: 'exact' });
 
-      // Apply filters
+      
       if (options?.authorId) {
         query = query.eq('author_id', options.authorId);
       }
@@ -60,7 +60,7 @@ export function usePosts(options?: {
       if (options?.status) {
         query = query.eq('status', options.status);
       } else {
-        // Only show published posts by default for public viewing
+        
         if (!options?.authorId) {
           query = query.eq('status', 'published');
         }
@@ -70,7 +70,7 @@ export function usePosts(options?: {
         query = query.or(`title.ilike.%${options.search}%,content.ilike.%${options.search}%`);
       }
 
-      // Apply pagination
+      
       if (options?.limit) {
         query = query.limit(options.limit);
       }
@@ -79,7 +79,7 @@ export function usePosts(options?: {
         query = query.range(options.offset, (options.offset + (options.limit || 10)) - 1);
       }
 
-      // Order by creation date
+      
       query = query.order('created_at', { ascending: false });
 
       const { data, error, count } = await query;
@@ -88,7 +88,7 @@ export function usePosts(options?: {
         throw error;
       }
 
-      // Fetch author info for each post
+      
       const postsWithAuthors = await Promise.all((data || []).map(async (post) => {
         let authorProfile = null;
         if (post.author_id) {
@@ -97,7 +97,7 @@ export function usePosts(options?: {
             .select('display_name, avatar_url')
             .eq('id', post.author_id)
             .single();
-          // Fallback to user email if profile missing
+          
           authorProfile = profile || { display_name: post.author_id, avatar_url: null };
         }
         return { ...post, author: authorProfile };
@@ -123,7 +123,7 @@ export function usePosts(options?: {
   }) => {
     if (!user) throw new Error('User not authenticated');
 
-    // Always create or update the user profile for the author
+    
     await supabase
       .from('user_profiles')
       .upsert({

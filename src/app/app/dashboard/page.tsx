@@ -1,18 +1,25 @@
 'use client';
 
-import { useAuth } from '@/hooks/use-auth';
-import { useSubscription } from '@/hooks/use-subscription';
-import { usePosts } from '@/hooks/use-posts';
-import { useProfile } from '@/hooks/use-profile';
-import { PostCard } from '@/components/blog/post-card';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useAuth } from '../../hooks/use-auth';
+import { useSubscription } from '../../hooks/use-subscription';
+import { usePosts } from '../../hooks/use-posts';
+import { useProfile } from '../../hooks/use-profile';
+import { PostCard } from '../../components/blog/post-card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import { Badge } from '../../components/ui/badge';
+import { Button } from '../../components/ui/button';
+import { Skeleton } from '../../components/ui/skeleton';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+
+type Post = {
+  id: string;
+  title: string;
+  content: string;
+  // Add other fields as needed
+};
 
 export default function DashboardPage() {
   const { user, loading: authLoading } = useAuth();
@@ -51,7 +58,7 @@ export default function DashboardPage() {
     return null;
   }
 
-  const handleDeletePost = async (post: any) => {
+  const handleDeletePost = async (post: Post) => {
     if (!confirm('Are you sure you want to delete this post?')) return;
     
     setDeletingPost(post.id);
@@ -64,7 +71,7 @@ export default function DashboardPage() {
     }
   };
 
-  const handleEditPost = (post: any) => {
+  const handleEditPost = (post: Post) => {
     router.push(`/posts/${post.id}/edit`);
   };
 
@@ -172,14 +179,14 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-4">
-              <Button asChild variant="outline">
+              <Button asChild>
                 <Link href="/posts">Browse All Posts</Link>
               </Button>
-              <Button asChild variant="outline">
+              <Button asChild>
                 <Link href="/pricing">View All Plans</Link>
               </Button>
               {isActive && (
-                <Button variant="outline" disabled>
+                <Button disabled>
                   Manage Subscription (Coming Soon)
                 </Button>
               )}

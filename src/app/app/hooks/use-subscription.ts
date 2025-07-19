@@ -18,7 +18,7 @@ export interface UserSubscription {
 }
 
 export function useSubscription() {
-  // Demo/test mode: no real subscription
+  
   return {
     subscription: null,
     loading: false,

@@ -1,9 +1,9 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { PostForm } from '@/components/blog/post-form';
-import { usePosts } from '@/hooks/use-posts';
-import { useAuth } from '@/hooks/use-auth';
+import { PostForm } from '../../components/blog/post-form';
+import { usePosts } from '../../hooks/use-posts';
+import { useAuth } from '../../hooks/use-auth';
 import { useEffect } from 'react';
 
 export function CreatePostPage() {
@@ -31,7 +31,11 @@ export function CreatePostPage() {
     return null;
   }
 
-  const handleSubmit = async (data: any) => {
+  type PostFormData = {
+    title: string;
+    content: string;
+  };
+  const handleSubmit = async (data: PostFormData) => {
     await createPost(data);
     router.push('/dashboard');
   };

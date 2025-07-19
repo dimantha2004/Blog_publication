@@ -44,7 +44,7 @@ export function useProfile() {
         .single();
 
       if (error) {
-        // If profile doesn't exist, create it
+        
         if (error.code === 'PGRST116') {
           const { data: newProfile, error: createError } = await supabase
             .from('user_profiles')
