@@ -1,54 +1,34 @@
 'use client';
 
-import { useAuth } from '../hooks/use-auth';
-import { useSubscription } from '../hooks/use-subscription';
-import { usePosts } from '../hooks/use-posts';
-import { useProfile } from '../hooks/use-profile';
-import { PostCard } from '../components/blog/post-card';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
-import { Button } from '../components/ui/button';
-import { Skeleton } from '../components/ui/skeleton';
-import { Plus } from 'lucide-react';
-import Link from 'next/link';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-
-type Post = {
-  id: string;
-  title: string;
-  content: string;
-  // Add other fields as needed
-};
+import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
+import { usePosts } from '@/contexts/PostContext';
+import Header from '@/components/Header';
+import PostCard from '@/components/PostCard';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Plus, FileText, Crown, TrendingUp } from 'lucide-react';
 
 export default function DashboardPage() {
-  const { user, loading: authLoading } = useAuth();
-  const { profile, refetch: refetchProfile } = useProfile();
-  const { subscription, loading: subLoading, isActive, activeSubscriptionName } = useSubscription();
-  const { posts, loading: postsLoading, deletePost } = usePosts({ 
-    authorId: user?.id,
-    limit: 10 
-  });
-  const [deletingPost, setDeletingPost] = useState<string | null>(null);
+  const { user, isLoading } = useAuth();
+  const { getUserPosts } = usePosts();
   const router = useRouter();
 
   useEffect(() => {
-    if (!authLoading && !user) {
+    if (!isLoading && !user) {
       router.push('/login');
     }
-    
-    refetchProfile();
-  }, [user, authLoading, router, refetchProfile]);
+  }, [user, isLoading, router]);
 
-  if (authLoading || subLoading) {
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Skeleton className="h-8 w-48 mb-8" />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Skeleton className="h-48" />
-            <Skeleton className="h-48" />
-          </div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
         </div>
       </div>
     );
@@ -58,142 +38,166 @@ export default function DashboardPage() {
     return null;
   }
 
-  const handleDeletePost = async (post: Post) => {
-    if (!confirm('Are you sure you want to delete this post?')) return;
-    
-    setDeletingPost(post.id);
-    try {
-      await deletePost(post.id);
-    } catch (error) {
-      console.error('Error deleting post:', error);
-    } finally {
-      setDeletingPost(null);
-    }
-  };
-
-  const handleEditPost = (post: Post) => {
-    router.push(`/posts/${post.id}/edit`);
-  };
-
-  const formatDate = (timestamp: number | null) => {
-    if (!timestamp) return 'N/A';
-    return new Date(timestamp * 1000).toLocaleDateString();
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active':
-        return 'default';
-      case 'past_due':
-        return 'destructive';
-      case 'canceled':
-        return 'secondary';
-      default:
-        return 'outline';
-    }
-  };
+  const userPosts = getUserPosts(user.id);
+  const totalPosts = userPosts.length;
+  const premiumPosts = userPosts.filter(post => post.visibility === 'premium').length;
+  const freePosts = userPosts.filter(post => post.visibility === 'free').length;
+  const isPremium = (user as any)?.is_premium;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      
+      <main className="container mx-auto px-4 py-8">
+        {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="mt-2 text-gray-600 flex items-center gap-2">
-            Welcome back, {user.email}
-            {profile?.is_premium && (
-              <span className="inline-block bg-yellow-400 text-white text-xs font-semibold px-2 py-1 rounded ml-2">Premium User</span>
-            )}
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                Welcome back, {user.user_metadata?.full_name || user.email}!
+              </h1>
+              <p className="text-gray-600">
+                Manage your posts and track your writing progress
+              </p>
+            </div>
+            <div className="flex items-center space-x-4">
+              {isPremium && (
+                <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900">
+                  <Crown className="w-4 h-4 mr-1" />
+                  Premium Member
+                </Badge>
+              )}
+              <Link href="/create">
+                <Button className="flex items-center space-x-2">
+                  <Plus className="w-4 h-4" />
+                  <span>New Post</span>
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card>
-            <CardHeader>
-              <CardTitle>Account Information</CardTitle>
-              <CardDescription>Your account details</CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Posts</CardTitle>
+              <FileText className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <label className="text-sm font-medium text-gray-500">Email</label>
-                <p className="text-sm">{user.email}</p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-500">Member since</label>
-                <p className="text-sm">{new Date(user.created_at).toLocaleDateString()}</p>
-              </div>
+            <CardContent>
+              <div className="text-2xl font-bold">{totalPosts}</div>
+              <p className="text-xs text-muted-foreground">
+                All your published posts
+              </p>
             </CardContent>
           </Card>
 
-         
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Free Posts</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{freePosts}</div>
+              <p className="text-xs text-muted-foreground">
+                Available to all readers
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Premium Posts</CardTitle>
+              <Crown className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{premiumPosts}</div>
+              <p className="text-xs text-muted-foreground">
+                Exclusive content
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Account Status</CardTitle>
+              <Crown className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {isPremium ? 'Premium' : 'Free'}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {isPremium ? 'Full access' : 'Limited features'}
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
-        <Card className="mt-6">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>My Posts</CardTitle>
-                <CardDescription>Manage your blog posts</CardDescription>
-              </div>
-              <Button asChild>
-                <Link href="/create-post">
-                  <Plus className="w-4 h-4 mr-2" />
-                  New Post
-                </Link>
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {postsLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <Skeleton key={i} className="h-64" />
-                ))}
-              </div>
-            ) : posts.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-gray-500 mb-4">You haven't created any posts yet</p>
-                <Button asChild>
-                  <Link href="/create-post">Create your first post</Link>
+        {/* Posts Section */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">Your Posts</h2>
+            {totalPosts > 0 && (
+              <Link href="/create">
+                <Button variant="outline" className="flex items-center space-x-2">
+                  <Plus className="w-4 h-4" />
+                  <span>Add New</span>
                 </Button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {posts.map((post) => (
-                  <PostCard
-                    key={post.id}
-                    post={post}
-                    showActions={true}
-                    onEdit={handleEditPost}
-                    onDelete={handleDeletePost}
-                  />
-                ))}
-              </div>
+              </Link>
             )}
-          </CardContent>
-        </Card>
+          </div>
 
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-4">
-              <Button asChild>
-                <Link href="/posts">Browse All Posts</Link>
-              </Button>
-              <Button asChild>
-                <Link href="/pricing">View All Plans</Link>
-              </Button>
-              {isActive && (
-                <Button disabled>
-                  Manage Subscription (Coming Soon)
-                </Button>
-              )}
+          {totalPosts === 0 ? (
+            <Card>
+              <CardContent className="pt-6">
+                <div className="text-center py-12">
+                  <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    No posts yet
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    Start sharing your thoughts and ideas with the world
+                  </p>
+                  <Link href="/create">
+                    <Button className="flex items-center space-x-2">
+                      <Plus className="w-4 h-4" />
+                      <span>Create Your First Post</span>
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {userPosts.map((post) => (
+                <PostCard key={post.id} post={post} showActions={true} />
+              ))}
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          )}
+        </div>
+
+        {/* Premium Message for Premium Users */}
+        {isPremium && (
+          <Card className="bg-gradient-to-r from-yellow-100 to-yellow-200 border-yellow-300">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2 text-yellow-800">
+                <Crown className="w-5 h-5" />
+                <span>Premium Member</span>
+              </CardTitle>
+              <CardDescription className="text-yellow-700">
+                You have full access to all premium features and content.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900">
+                <Crown className="w-4 h-4 mr-1" />
+                Premium Active
+              </Badge>
+            </CardContent>
+          </Card>
+        )}
+      </main>
     </div>
   );
 }

@@ -3,37 +3,49 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth } from '../../contexts/AuthContext';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
-import { Alert, AlertDescription } from '../../components/ui/alert';
+import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 
-export default function LoginPage() {
+export default function RegisterPage() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const { login, isLoading } = useAuth();
+  const { register, isLoading } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    if (!email || !password) {
+    if (!name || !email || !password || !confirmPassword) {
       setError('Please fill in all fields');
       return;
     }
 
-    const result = await login(email, password);
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+
+    const result = await register(email, password, name);
     if (result.success) {
-      toast.success('Welcome back!');
+      toast.success('Account created successfully!');
       router.push('/dashboard');
     } else {
-      setError(result.error || 'Login failed');
+      setError(result.error || 'Registration failed');
     }
   };
 
@@ -45,15 +57,15 @@ export default function LoginPage() {
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Home</span>
           </Link>
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-2 tracking-tight">Welcome Back</h1>
-          <p className="text-lg text-gray-600">Sign in to your account to continue</p>
+          <h1 className="text-4xl font-extrabold text-gray-900 mb-2 tracking-tight">Get Started</h1>
+          <p className="text-lg text-gray-600">Create your account to start blogging</p>
         </div>
 
         <Card className="shadow-xl rounded-2xl border-0 bg-white/90 backdrop-blur-md">
           <CardHeader className="pb-2">
-            <CardTitle className="text-2xl font-bold text-blue-900">Sign In</CardTitle>
+            <CardTitle className="text-2xl font-bold text-blue-900">Create Account</CardTitle>
             <CardDescription className="text-gray-500">
-              Enter your credentials to access your account
+              Join our community of writers and readers
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -63,6 +75,19 @@ export default function LoginPage() {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
+
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-base font-medium">Full Name</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="John Doe"
+                  required
+                  className="rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-base px-4 py-2"
+                />
+              </div>
 
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-base font-medium">Email</Label>
@@ -90,23 +115,36 @@ export default function LoginPage() {
                 />
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword" className="text-base font-medium">Confirm Password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  className="rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-base px-4 py-2"
+                />
+              </div>
+
               <Button type="submit" className="w-full py-3 text-lg font-semibold rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-md transition-all duration-200" disabled={isLoading}>
                 {isLoading ? (
                   <div className="flex items-center space-x-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Signing in...</span>
+                    <span>Creating account...</span>
                   </div>
                 ) : (
-                  'Sign In'
+                  'Create Account'
                 )}
               </Button>
             </form>
 
             <div className="mt-8 text-center">
               <p className="text-base text-gray-600">
-                Don't have an account?{' '}
-                <Link href="/signup" className="text-blue-600 hover:text-blue-700 font-semibold underline underline-offset-2">
-                  Sign up
+                Already have an account?{' '}
+                <Link href="/login" className="text-blue-600 hover:text-blue-700 font-semibold underline underline-offset-2">
+                  Sign in
                 </Link>
               </p>
             </div>
