@@ -32,7 +32,7 @@ export default function RootLayout({
           <Link href="/home" className="text-xl font-bold tracking-tight text-foreground">Blog Publication</Link>
           <div className="flex gap-4">
             <Link href="/login" className="rounded-full border border-foreground px-5 py-1.5 font-medium text-base hover:bg-foreground hover:text-background transition-colors">Login</Link>
-            <Link href="/register" className="rounded-full border border-foreground px-5 py-1.5 font-medium text-base hover:bg-foreground hover:text-background transition-colors">Register</Link>
+            <Link href="/signup" className="rounded-full border border-foreground px-5 py-1.5 font-medium text-base hover:bg-foreground hover:text-background transition-colors">Register</Link>
           </div>
         </nav>
         <div className="pt-20">{children}</div>

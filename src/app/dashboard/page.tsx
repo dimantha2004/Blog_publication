@@ -1,14 +1,14 @@
 'use client';
 
-import { useAuth } from '../../hooks/use-auth';
-import { useSubscription } from '../../hooks/use-subscription';
-import { usePosts } from '../../hooks/use-posts';
-import { useProfile } from '../../hooks/use-profile';
-import { PostCard } from '../../components/blog/post-card';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
-import { Skeleton } from '../../components/ui/skeleton';
+import { useAuth } from '../hooks/use-auth';
+import { useSubscription } from '../hooks/use-subscription';
+import { usePosts } from '../hooks/use-posts';
+import { useProfile } from '../hooks/use-profile';
+import { PostCard } from '../components/blog/post-card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Badge } from '../components/ui/badge';
+import { Button } from '../components/ui/button';
+import { Skeleton } from '../components/ui/skeleton';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
