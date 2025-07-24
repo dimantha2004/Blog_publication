@@ -10,6 +10,7 @@ import { Card, CardContent, CardFooter } from './ui/card';
 import { Crown, Lock, Calendar, User } from 'lucide-react';
 import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
 
 interface PostCardProps {
   post: Post;
@@ -33,6 +34,11 @@ export default function PostCard({ post, showActions = false }: PostCardProps) {
       ? plainText.substring(0, maxLength) + '...'
       : plainText;
   };
+
+  const formattedDate = useMemo(
+    () => format(new Date(post.createdAt), 'MMM d, yyyy'),
+    [post.createdAt]
+  );
 
   return (
     <Card className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
@@ -63,7 +69,7 @@ export default function PostCard({ post, showActions = false }: PostCardProps) {
           </div>
           <div className="flex items-center space-x-1 text-sm text-gray-500">
             <Calendar className="w-4 h-4" />
-            <time>{format(new Date(post.createdAt), 'MMM d, yyyy')}</time>
+            <time>{formattedDate}</time>
           </div>
         </div>
         
